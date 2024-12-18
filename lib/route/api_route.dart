@@ -1,10 +1,12 @@
 import 'package:vania/vania.dart';
+import 'package:vania_test/app/http/controllers/auth_controller.dart';
 import 'package:vania_test/app/http/controllers/orderitems_controller.dart';
 import 'package:vania_test/app/http/controllers/productnotes_controller.dart';
 import 'package:vania_test/app/http/controllers/products_controller.dart';
 import 'package:vania_test/app/http/controllers/customers_controller.dart';
 import 'package:vania_test/app/http/controllers/orders_controller.dart';
 import 'package:vania_test/app/http/controllers/vendors_controller.dart';
+import 'package:vania_test/app/http/middleware/authenticate.dart';
 
 class ApiRoute implements Route {
   @override
@@ -22,7 +24,8 @@ class ApiRoute implements Route {
     // Routes untuk customers
     Router.get('customers', customersController.getAllCustomers);
     Router.get('customers/<custId>', customersController.getCustomerById);
-    Router.post('customers', customersController.createCustomer);
+    Router.post('customers', customersController.createCustomer)
+        .middleware([AuthenticateMiddleware()]);
     Router.put('customers/{custId}', customersController.update);
     Router.delete('customers/{custId}', customersController.destroy);
 
@@ -52,5 +55,9 @@ class ApiRoute implements Route {
     Router.get('orderitems/{id}', orderitemsController.show);
     Router.put('orderitems/{id}', orderitemsController.update);
     Router.delete('orderitems/{id}', orderitemsController.destroy);
+
+    Router.post('/login', authController.login);
+    Router.delete('/delete/token', authController.allLogout);
+    Router.post('/register', authController.register);
   }
 }
